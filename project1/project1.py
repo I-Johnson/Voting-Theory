@@ -1,65 +1,64 @@
+import copy
 import random
 
-def simulate_election(num_voters, num_candidates):
-    # Generate random voter preferences
-    preferences = []
-    for i in range(num_voters):
-        preferences.append(random.sample(range(num_candidates), num_candidates))
+def make_IC_profile(num_voters: int, num_alternatives:int):
+  alternatives = list(range(num_alternatives))
+  profile = []
+  for i in range(num_voters):
+      random.shuffle(alternatives)
+      profile.append(copy.copy(alternatives))
+  
+  return profile
 
-    # Determine the winner of each pairwise election
-    pairwise_winners = []
-    for i in range(num_candidates):
-        for j in range(i+1, num_candidates):
-            votes_for_i = 0
-            votes_for_j = 0
-            for k in range(num_voters):
-                if preferences[k][i] < preferences[k][j]:
-                    votes_for_i += 1
-                else:
-                    votes_for_j += 1
-            if votes_for_i > votes_for_j:
-                pairwise_winners.append(i)
-            else:
-                pairwise_winners.append(j)
+def simulate_election(profile):
+  num_voters = len(profile)
+  num_alternatives = len(profile[0])
 
-    # Determine if a Condorcet winner exists
-    condorcet_winner = None
-    for i in range(num_candidates):
-        condorcet_winner_found = True
-        for j in range(num_candidates):
-            if i == j:
-                continue
-            if pairwise_winners[i*(num_candidates-1)+j] != i:
-                condorcet_winner_found = False
-                break
-        if condorcet_winner_found:
-            condorcet_winner = i
-            break
+  # Determine the pairwise winners for each candidate
+  pairwise_winners = []
+  for i in range(num_alternatives):
+      for j in range(num_alternatives):
+          if i == j:
+              continue
+          i_wins = 0
+          j_wins = 0
+          for voter in range(num_voters):
+              if profile[voter].index(i) < profile[voter].index(j):
+                  i_wins += 1
+              else:
+                  j_wins += 1
+          if i_wins > j_wins:
+              pairwise_winners.append(i)
+          else:
+              pairwise_winners.append(j)
 
-    return condorcet_winner
+  # Determine if there is a Condorcet winner
+  condorcet_winner = None
+  for i in range(num_alternatives):
+      condorcet_winner_found = True
+      for j in range(num_alternatives):
+          if i == j:
+              continue
+          if pairwise_winners[i*(num_alternatives-1)+j] != i:
+              condorcet_winner_found = False
+              break
+      if condorcet_winner_found:
+          condorcet_winner = i
+          break
 
-def run_simulations(num_simulations, num_voters, num_candidates):
-    condorcet_winners_exist = 0
-    for i in range(num_simulations):
-        if simulate_election(num_voters, num_candidates) is not None:
-            condorcet_winners_exist += 1
-    return condorcet_winners_exist
+  return condorcet_winner
 
-# Run the simulations
-num_simulations = 10000
-num_voters = 10
-num_candidates = 3
-condorcet_winners_exist = run_simulations(num_simulations, num_voters, num_candidates)
+def main():
+  num_simulations = 10
+  num_voters = 10
+  num_alternatives = 4
+  condorcet_winner_count = 0
+  for i in range(num_simulations):
+      profile = make_IC_profile(num_voters, num_alternatives)
+      condorcet_winner = simulate_election(profile)
+      if condorcet_winner is not None:
+          condorcet_winner_count += 1
+  print(f"Condorcet winner found in {condorcet_winner_count}/{num_simulations} simulations.")
 
-# Print the results
-print(f"Out of {num_simulations} simulations with {num_voters} voters and {num_candidates} candidates, a Condorcet winner existed in {condorcet_winners_exist} simulations ({condorcet_winners_exist/num_simulations*100:.2f}%).")
-
-
-
-
-# '''def run_simulations(num_simulations, num_voters, num_candidates):
-#     condorcet_winner_exists = 0
-#     for i in range(num_simulations):
-#         if simulate'''
-
-# print(simulate_election(10, 3))
+if __name__ == "__main__":
+  main()
