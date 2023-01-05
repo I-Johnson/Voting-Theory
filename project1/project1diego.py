@@ -29,6 +29,8 @@ def condercet(num_voters, num_candidates):
                 votes_for_aw += 1
             else:
                 votes_for_candidate += 0
+
+    print("something")
             
         
 
