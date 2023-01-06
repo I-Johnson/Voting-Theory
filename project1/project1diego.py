@@ -51,8 +51,19 @@ def simulate_election(profile):
 
   return condorcet_winner
 
-def borda(profile,):
-    pass
+def borda(profile):
+    bordas_results = []
+    for i in range(len(profile[0])):
+        scores_of_alternative = 0
+        for ballot in profile:
+            alternatives_index = ballot.index(i)
+            value = (len(profile[0]) - (0+1))
+            scores_of_alternative += value
+        bordas_results.append(scores_of_alternative)
+    index_max = max(bordas_results)
+    winner = bordas_results.index(index_max)
+    return winner
+    
 
 def plurality(profile):
     votes = []
@@ -83,13 +94,14 @@ def main():
         condorcet_winner = simulate_election(profile)
         if condorcet_winner is not None:
             condorcet_winner_count += 1
-            # if condorcet_winner == borda(profile):
-            #     condorcet_borda += 1
+            if condorcet_winner == borda(profile):
+                 condorcet_borda += 1
             if condorcet_winner == plurality(profile):
                 condorcet_plurality += 1  
 
-    print(condorcet_winner_count)
-    print(condorcet_plurality)
+    print(f"Winner of codorce {condorcet_winner_count}")
+    print(f"Winner of plurality in condorcet: {condorcet_plurality}")
+    print(f"Winner of Borda {condorcet_borda}")
 
         
   
