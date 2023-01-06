@@ -76,6 +76,12 @@ def plurality(profile):
                 votes_for_alternatives += 1
         votes.append(votes_for_alternatives)
     index_max = max(votes)
+    if votes.count(index_max) > 1:
+    # There are two or more maximum numbers in the list, so return None
+        winner = None
+    else:
+    # There is only one maximum number in the list, so return it
+        winner = index_max
     winner = votes.index(index_max)
     return winner
 
