@@ -40,6 +40,7 @@ def simulate_election(profile):
           if i == j:
               continue
         # to calculate the index in a list where the result of a pairwise election between candidates i and j is stored.
+        # i, j is the index of the candidates that are being compared. 
           if pairwise_winners[i*(num_alternatives-1)+j] != i:
               condorcet_winner_found = False
               break
