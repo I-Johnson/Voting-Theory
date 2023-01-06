@@ -53,25 +53,36 @@ def simulate_election(profile):
 def borda(profile):
     pass
 
-def plurality(profile):
-    pass
+def plurality(profile, num_alt):
+    alt = None
+    for alt in num_alt:
+        votes_for_alt = 0
+        for i in range(len(profile)):
+            if profile[i][0] == alt:
+                votes_for_alt += 1
+        if votes_for_alt > (0.5 * len(profile)):
+            return alt
+    return alt
+
+
 
 def main():
-  num_simulations = 10
-  num_voters = 10
-  num_alternatives = 4
-  condorcet_winner_count = 0
-  condorcet_borda = 0
-  condorcet_plurality = 0 
-  for i in range(num_simulations):
-      profile = make_IC_profile(num_voters, num_alternatives)
-      condorcet_winner = simulate_election(profile)
-      if condorcet_winner is not None:
-        condorcet_winner_count += 1
+    num_simulations = 100000
+    num_voters = 100
+    num_alternatives = 4
+    condorcet_winner_count = 0
+    condorcet_borda = 0
+    condorcet_plurality = 0 
+    for i in range(num_simulations):
+        profile = make_IC_profile(num_voters, num_alternatives)
+        condorcet_winner = simulate_election(profile)
+        if condorcet_winner is not None:
+            condorcet_winner_count += 1
         if condorcet_winner == borda(profile):
-            pass
+            condorcet_borda += 1
         if condorcet_winner == plurality(profile):
-            pass
+            condorcet_plurality += 1  
+    print(condorcet_winner_count)
 
         
   
