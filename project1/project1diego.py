@@ -51,13 +51,15 @@ def simulate_election(profile):
 
   return condorcet_winner
 
-def borda(profile):
+def borda(profile,):
     pass
 
-def plurality(profile, num_alternatives):
+def plurality(profile):
     votes = []
-    for i in range(num_alternatives):
+    #This is the num of alternatives
+    for i in range(len(profile[0])):
         votes_for_alternatives = 0
+        #This is the number of voters
         for j in range(len(profile)):
             if profile[j][0] == i:
                 votes_for_alternatives += 1
@@ -83,7 +85,7 @@ def main():
             condorcet_winner_count += 1
             # if condorcet_winner == borda(profile):
             #     condorcet_borda += 1
-            if condorcet_winner == plurality(profile, num_alternatives):
+            if condorcet_winner == plurality(profile):
                 condorcet_plurality += 1  
 
     print(condorcet_winner_count)
