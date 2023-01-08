@@ -61,6 +61,12 @@ def borda(profile):
             scores_of_alternative += value
         bordas_results.append(scores_of_alternative)
     index_max = max(bordas_results)
+    if bordas_results.count(index_max) > 1:
+    # There are two or more maximum numbers in the list, so return None
+        winner = None
+    else:
+    # There is only one maximum number in the list, so return it
+        winner = index_max
     winner = bordas_results.index(index_max)
     return winner
     
